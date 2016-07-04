@@ -44,26 +44,26 @@ public class MediaProviderDemo extends Activity {
         view = (Button)findViewById(R.id.view);
         show = (ListView)findViewById(R.id.show);
         
-        //Îªadd°´Å¥µÄµ¥»÷ÊÂ¼ş°ó¶¨ÊÂ¼ş¼àÌıÆ÷
+        //ä¸ºaddæŒ‰é’®çš„å•å‡»äº‹ä»¶ç»‘å®šäº‹ä»¶ç›‘å¬å™¨
         add.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				//´´½¨ContentValues¶ÔÏó£¬×¼±¸²åÈëÊı¾İ
+				//åˆ›å»ºContentValueså¯¹è±¡ï¼Œå‡†å¤‡æ’å…¥æ•°æ®
 				ContentValues values = new ContentValues();
 				values.put(Media.DISPLAY_NAME, "a");
-				values.put(Media.DATE_MODIFIED, "ÃÀÅ®");
+				values.put(MediaStore.Images.Media.DESCRIPTION, "ç¾å¥³");
 				values.put(Media.MIME_TYPE, "image/jpeg");
-				//²åÈëÊı¾İ£¬·µ»ØËù²åÈëÊı¾İ¶ÔÓ¦µÄUri
+				//æ’å…¥æ•°æ®ï¼Œè¿”å›æ‰€æ’å…¥æ•°æ®å¯¹åº”çš„Uri
 				Uri uri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, values);
-				//¼ÓÔØÓ¦ÓÃ³ÌĞòÏÂµÄaÍ¼Æ¬
+				//åŠ è½½åº”ç”¨ç¨‹åºä¸‹çš„aå›¾ç‰‡
 				Bitmap bitmap = BitmapFactory.decodeResource(MediaProviderDemo.this.getResources(), R.drawable.a);
 				
 				OutputStream os = null;
 				try 
 				{
-					os = getContentResolver().openOutputStream(uri); //»ñÈ¡¸Õ²åÈëµÄÊı¾İµÄUri¶ÔÓ¦µÄÊä³öÁ÷
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os); //½«bitmapÍ¼Æ¬±£´æµ½Uri¶ÔÓ¦µÄÊı¾İ½ÚµãÖĞ
+					os = getContentResolver().openOutputStream(uri); //è·å–åˆšæ’å…¥çš„æ•°æ®çš„Uriå¯¹åº”çš„è¾“å‡ºæµ
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os); //å°†bitmapå›¾ç‰‡ä¿å­˜åˆ°Uriå¯¹åº”çš„æ•°æ®èŠ‚ç‚¹ä¸­
 					os.close();
 				} 
 				catch (IOException e) 
@@ -73,30 +73,30 @@ public class MediaProviderDemo extends Activity {
 			}
 		});
         
-      //Îªview°´Å¥µÄµ¥»÷ÊÂ¼ş°ó¶¨ÊÂ¼ş¼àÌıÆ÷
+      //ä¸ºviewæŒ‰é’®çš„å•å‡»äº‹ä»¶ç»‘å®šäº‹ä»¶ç›‘å¬å™¨
         view.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				// Çå¿Õnames¡¢descs¡¢fileNames¼¯ºÏÀïÔ­ÓĞµÄÊı¾İ
+				// æ¸…ç©ºnamesã€descsã€fileNamesé›†åˆé‡ŒåŸæœ‰çš„æ•°æ®
 				names.clear();
 				descs.clear();
 				fileNames.clear();
-				//Í¨¹ıContentResolver²éÑ¯ËùÓĞÍ¼Æ¬ĞÅÏ¢
+				//é€šè¿‡ContentResolveræŸ¥è¯¢æ‰€æœ‰å›¾ç‰‡ä¿¡æ¯
 				Cursor cursor = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, null, null, null, null);
 				while (cursor.moveToNext())
 				{
-					String name = cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME)); //»ñÈ¡Í¼Æ¬µÄÏÔÊ¾Ãû
-					String desc = cursor.getString(cursor.getColumnIndex(Media.DATE_MODIFIED)); //»ñÈ¡Í¼Æ¬µÄÏêÏ¸ÃèÊö
-					byte[] data = cursor.getBlob(cursor.getColumnIndex(Media.DATA)); //»ñÈ¡Í¼Æ¬µÄ±£´æÎ»ÖÃµÄÊı¾İ
+					String name = cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME)); //è·å–å›¾ç‰‡çš„æ˜¾ç¤ºå
+					String desc = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DESCRIPTION)); //è·å–å›¾ç‰‡çš„è¯¦ç»†æè¿°
+					byte[] data = cursor.getBlob(cursor.getColumnIndex(Media.DATA)); //è·å–å›¾ç‰‡çš„ä¿å­˜ä½ç½®çš„æ•°æ®
 					
-					names.add(name); //½«Í¼Æ¬Ìí¼Óµ½names¼¯ºÏÖĞ
-					descs.add(desc); //½«Í¼Æ¬ÃèÊöÌí¼Óµ½descs¼¯ºÏÖĞ
-					fileNames.add(new String(data, 0, data.length - 1)); //½«Í¼Æ¬±£´æÂ·¾¶Ìí¼Óµ½fileNames¼¯ºÏÖĞ
+					names.add(name); //å°†å›¾ç‰‡æ·»åŠ åˆ°namesé›†åˆä¸­
+					descs.add(desc); //å°†å›¾ç‰‡æè¿°æ·»åŠ åˆ°descsé›†åˆä¸­
+					fileNames.add(new String(data, 0, data.length - 1)); //å°†å›¾ç‰‡ä¿å­˜è·¯å¾„æ·»åŠ åˆ°fileNamesé›†åˆä¸­
 				}
-				//´´½¨Ò»¸öList¼¯ºÏ£¬List¼¯ºÏµÄÔªËØÊÇMap
+				//åˆ›å»ºä¸€ä¸ªListé›†åˆï¼ŒListé›†åˆçš„å…ƒç´ æ˜¯Map
 				List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
-				//½«names¡¢descsÁ½¸ö¼¯ºÏ¶ÔÏóµÄÊı¾İ×ª»»µ½Map¼¯ºÏÖĞ
+				//å°†namesã€descsä¸¤ä¸ªé›†åˆå¯¹è±¡çš„æ•°æ®è½¬æ¢åˆ°Mapé›†åˆä¸­
 				for (int i = 0; i < names.size(); i++)
 				{
 					Map<String, Object> listItem = new HashMap<String, Object>();
@@ -104,27 +104,27 @@ public class MediaProviderDemo extends Activity {
         			listItem.put("desc", descs.get(i));
         			listItems.add(listItem);
 				}
-				//´´½¨Ò»¸öSimpleAdapter
+				//åˆ›å»ºä¸€ä¸ªSimpleAdapter
 				SimpleAdapter simpleAdapter = new SimpleAdapter(MediaProviderDemo.this, 
 						listItems, R.layout.line, new String[] {"name", "desc"}, new int[] {R.id.name, R.id.desc});
-				show.setAdapter(simpleAdapter); //Îªshow ListView×é¼şÉèÖÃAdapter
+				show.setAdapter(simpleAdapter); //ä¸ºshow ListViewç»„ä»¶è®¾ç½®Adapter
 			}
 		});
         
-      //Îªshow ListViewµÄÁĞ±íÏîµ¥»÷ÊÂ¼şÌí¼Ó¼àÌıÆ÷
+      //ä¸ºshow ListViewçš„åˆ—è¡¨é¡¹å•å‡»äº‹ä»¶æ·»åŠ ç›‘å¬å™¨
         show.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View source, int position, long id) {
-				//¼ÓÔØview.xml½çÃæ²¼¾Ö´ú±íµÄÊÓÍ¼
+				//åŠ è½½view.xmlç•Œé¢å¸ƒå±€ä»£è¡¨çš„è§†å›¾
 				View viewDialog = getLayoutInflater().inflate(R.layout.view, null);
-				//»ñÈ¡viewDialogÖĞIDÎªimageµÄ×é¼ş
+				//è·å–viewDialogä¸­IDä¸ºimageçš„ç»„ä»¶
 				ImageView image = (ImageView)viewDialog.findViewById(R.id.image);
 				image.setImageBitmap(BitmapFactory.decodeFile(fileNames.get(position)));
-				//Ê¹ÓÃ¶Ô»°¿òÏÔÊ¾ÓÃ»§µ¥»÷µÄÍ¼Æ¬
+				//ä½¿ç”¨å¯¹è¯æ¡†æ˜¾ç¤ºç”¨æˆ·å•å‡»çš„å›¾ç‰‡
 				new AlertDialog.Builder(MediaProviderDemo.this)
 				.setView(viewDialog)
-				.setPositiveButton("È·¶¨", null)
+				.setPositiveButton("ç¡®å®š", null)
 				.show();
 			}
 		});
